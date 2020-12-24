@@ -1,12 +1,13 @@
 package main
 
 import (
-	bn "7/bagnode"
 	"bufio"
 	"fmt"
 	"io"
 	"os"
 	"strings"
+
+	bn "7/bagnode"
 )
 
 // GetBagNode returns BagNode for the bag considering:
