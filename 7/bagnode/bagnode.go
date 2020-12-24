@@ -25,9 +25,9 @@ func (bn *BagNode) FindAllBaseBags() (baseBags []string) {
 	// Recursively search for base bags of base bag
 	for _, baseBagNode := range *bn.BaseBags {
 		baseBaseBags := baseBagNode.FindAllBaseBags()
-		isBaseBaseBagAlreadyFound := false
 		// Removing duplicates in the result
 		for _, baseBaseBag := range baseBaseBags {
+			isBaseBaseBagAlreadyFound := false
 			for _, alreadyFoundBag := range baseBags {
 				if baseBaseBag == alreadyFoundBag {
 					isBaseBaseBagAlreadyFound = true

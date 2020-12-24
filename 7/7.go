@@ -66,7 +66,6 @@ func main() {
 	for _, bagNode := range bagsTree {
 		if bagNode.Bag == "shinygold" {
 			baseBags := bagNode.FindAllBaseBags()
-			fmt.Println(baseBags)
 			fmt.Println(len(baseBags))
 		}
 	}
