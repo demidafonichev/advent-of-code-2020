@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strconv"
 	"strings"
 
 	bn "7/bagnode"
@@ -25,7 +26,7 @@ func GetBagNode(tree *[]*bn.BagNode, bag string) (bagNode *bn.BagNode) {
 	}
 	// If BagNode is not in the tree
 	if !isBagInTree {
-		bagNode = &bn.BagNode{Bag: bag, BaseBags: &[]*bn.BagNode{}}
+		bagNode = &bn.BagNode{Bag: bag, NestedBags: map[*bn.BagNode]int{}}
 		*tree = append(*tree, bagNode)
 	}
 	return
@@ -54,9 +55,11 @@ func main() {
 			// ruleParts[i] would be "no" for rules where
 			// bag contains no other bags
 			if ruleParts[i] != "no" {
+				count, _ := strconv.Atoi(ruleParts[i])
 				nestedBag := ruleParts[i+1] + ruleParts[i+2]
 				nestedBagNode := GetBagNode(&bagsTree, nestedBag)
-				nestedBagNode.AppendBaseBag(baseBagNode)
+
+				baseBagNode.AppendNestedBag(nestedBagNode, count)
 				i += 4
 			} else {
 				break
@@ -66,8 +69,8 @@ func main() {
 
 	for _, bagNode := range bagsTree {
 		if bagNode.Bag == "shinygold" {
-			baseBags := bagNode.FindAllBaseBags()
-			fmt.Println(len(baseBags))
+			baseBags := bagNode.FindCountAllNestedBags()
+			fmt.Println(baseBags - 1)
 		}
 	}
 }

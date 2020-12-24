@@ -3,41 +3,24 @@ package bagnode
 // BagNode contains information about
 // which bag is nested by which
 type BagNode struct {
-	Bag      string
-	BaseBags *[]*BagNode
+	Bag        string
+	NestedBags map[*BagNode]int
 }
 
-// AppendBaseBag appends pointer to base BagNode
-// to list of current BagNode's array of base bags
-func (bn *BagNode) AppendBaseBag(baseBagNode *BagNode) {
-	*bn.BaseBags = append(*bn.BaseBags, baseBagNode)
+// AppendNestedBag appends pointer to nested BagNode
+// to list of current BagNode's array of nested bags
+func (bn *BagNode) AppendNestedBag(nestedBagNode *BagNode, count int) {
+	bn.NestedBags[nestedBagNode] = count
 }
 
-// FindAllBaseBags searches for all base bags
-// in the tree from node BagNode
-// Recursively searches for base bags, then for base bags of
-// base bags and so on, removing duplicates
-func (bn *BagNode) FindAllBaseBags() (baseBags []string) {
-	// Append base bags on current bag first
-	for _, baseBagNode := range *bn.BaseBags {
-		baseBags = append(baseBags, baseBagNode.Bag)
-	}
-	// Recursively search for base bags of base bag
-	for _, baseBagNode := range *bn.BaseBags {
-		baseBaseBags := baseBagNode.FindAllBaseBags()
-		// Removing duplicates in the result
-		for _, baseBaseBag := range baseBaseBags {
-			isBaseBaseBagAlreadyFound := false
-			for _, alreadyFoundBag := range baseBags {
-				if baseBaseBag == alreadyFoundBag {
-					isBaseBaseBagAlreadyFound = true
-					break
-				}
-			}
-			if !isBaseBaseBagAlreadyFound {
-				baseBags = append(baseBags, baseBaseBag)
-			}
-		}
+// FindCountAllNestedBags count  for all nested bags in the tree from node BagNode
+// Recursively searches for nested bags, then for nested bags of nested bags and so on
+// Bags with no bested bags return 1
+// All other bags return 1 + result of call on nested bag * count
+func (bn *BagNode) FindCountAllNestedBags() (countNestedBags int) {
+	countNestedBags = 1
+	for nestedBagNode, count := range bn.NestedBags {
+		countNestedBags += nestedBagNode.FindCountAllNestedBags() * count
 	}
 	return
 }
